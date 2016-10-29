@@ -22,14 +22,13 @@ import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.mbrlabs.demo.MundusDemo;
 
 public class HtmlLauncher extends GwtApplication {
+    @Override
+    public GwtApplicationConfiguration getConfig() {
+        return new GwtApplicationConfiguration(480, 320);
+    }
 
-        @Override
-        public GwtApplicationConfiguration getConfig () {
-                return new GwtApplicationConfiguration(480, 320);
-        }
-
-        @Override
-        public ApplicationListener createApplicationListener () {
-                return new MundusDemo();
-        }
+    @Override
+    public ApplicationListener createApplicationListener() {
+        return new MundusDemo();
+    }
 }

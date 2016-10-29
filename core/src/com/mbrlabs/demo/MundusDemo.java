@@ -36,15 +36,15 @@ public class MundusDemo extends ApplicationAdapter {
 
     private FirstPersonCameraController controller;
 
-	@Override
-	public void create () {
+    @Override
+    public void create() {
         batch = new ModelBatch();
         fpsLogger = new FPSLogger();
 
         // setup mundus & load our scene
         mundus = new Mundus(Gdx.files.internal("mundus"));
         mundus.init();
-	    scene = mundus.loadScene("Main Scene.mundus");
+        scene = mundus.loadScene("Main Scene.mundus");
         scene.sceneGraph.batch = batch;
 
         // position cam
@@ -58,21 +58,21 @@ public class MundusDemo extends ApplicationAdapter {
         Gdx.input.setInputProcessor(controller);
     }
 
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         controller.update();
         scene.sceneGraph.update();
         scene.sceneGraph.render();
 
         fpsLogger.log();
-	}
-	
-	@Override
-	public void dispose () {
+    }
+
+    @Override
+    public void dispose() {
         mundus.dispose();
         batch.dispose();
-	}
+    }
 }
