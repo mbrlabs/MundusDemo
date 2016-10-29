@@ -18,32 +18,61 @@ package com.mbrlabs.demo;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
+import com.badlogic.gdx.math.Vector3;
+import com.mbrlabs.mundus.commons.Scene;
+import com.mbrlabs.mundus.runtime.Mundus;
 
 public class MundusDemo extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+
+    private FPSLogger fpsLogger;
+    private ModelBatch batch;
+
+    private Mundus mundus;
+    private Scene scene;
+
+    private FirstPersonCameraController controller;
+
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-	}
+        batch = new ModelBatch();
+        fpsLogger = new FPSLogger();
+
+        // setup mundus & load our scene
+        mundus = new Mundus(Gdx.files.internal("mundus"));
+        mundus.init();
+	    scene = mundus.loadScene("Main Scene.mundus");
+        scene.sceneGraph.batch = batch;
+
+        // position cam
+        scene.cam.position.set(230, 150, 190);
+        scene.cam.direction.rotate(Vector3.Y, 70);
+        scene.cam.direction.rotate(Vector3.Z, -20);
+
+        // setup input
+        controller = new FirstPersonCameraController(scene.cam);
+        controller.setVelocity(200f);
+        Gdx.input.setInputProcessor(controller);
+    }
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        controller.update();
+        scene.sceneGraph.update();
+        scene.sceneGraph.render();
+
+        fpsLogger.log();
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+        mundus.dispose();
+        batch.dispose();
 	}
 }
